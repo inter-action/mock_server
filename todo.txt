@@ -1,0 +1,20 @@
+
+
+
+another mongodb odm, typescript friendly - https://github.com/SierraSoftworks/Iridium
+
+
+http://mongoosejs.com/docs/api.html
+
+
+
+todo:
+  done:
+
+  pending:
+    be familiar with robomongo
+
+
+    http://mongoosejs.com/docs/faq.html
+
+

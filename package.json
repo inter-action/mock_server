@@ -1,0 +1,66 @@
+{
+  "name": "js_fullstack_playground",
+  "version": "1.0.0",
+  "description": "play with js fullstack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/inter-action/JS_Fullstack_Playground.git"
+  },
+  "keywords": [
+    "fullstack",
+    "typescript",
+    "nodejs boilerplate",
+    "koajs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inter-action/JS_Fullstack_Playground/issues"
+  },
+  "homepage": "https://github.com/inter-action/JS_Fullstack_Playground#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "boom": "^4.2.0",
+    "dotenv": "^4.0.0",
+    "jsonwebtoken": "^7.3.0",
+    "knex": "^0.12.7",
+    "koa": "^2.0.0",
+    "koa-bodyparser": "^3.2.0",
+    "koa-convert": "^1.2.0",
+    "koa-generic-session": "^1.11.5",
+    "koa-passport": "^2.2.2",
+    "koa-router": "^7.1.0",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.8.6",
+    "passport-local": "^1.0.0",
+    "pino": "^3.4.0",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/boom": "0.0.33",
+    "@types/chai": "^3.4.35",
+    "@types/chai-http": "0.0.29",
+    "@types/knex": "0.0.35",
+    "@types/koa": "^2.0.38",
+    "@types/koa-bodyparser": "^3.0.20",
+    "@types/koa-passport": "^2.0.4",
+    "@types/koa-router": "^7.0.21",
+    "@types/lodash": "^4.14.52",
+    "@types/mongoose": "^4.7.8",
+    "@types/node": "^7.0.5",
+    "@types/nodemailer": "^1.3.32",
+    "@types/pino": "^1.0.4",
+    "ava": "^0.18.2",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "glob": "^7.1.1",
+    "nodemon": "^1.11.0",
+    "ts-node": "^1.7.0",
+    "tslint": "^3.15.1",
+    "typescript": "^2.2.1"
+  }
+}

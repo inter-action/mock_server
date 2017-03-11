@@ -1,0 +1,6 @@
+.vscode
+.git
+docs
+node_modules
+**/*.DS_STORE
+blob
