@@ -2,7 +2,7 @@
 const passport = require("koa-passport");
 const { Strategy } = require("passport-local")
 
-import { UserModel, IUserModel } from "../model"
+import { AppModel, IUserModel } from "../model"
 import { errors, uid, env } from "../utils";
 import { logger } from "../logging"
 

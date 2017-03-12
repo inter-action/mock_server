@@ -1,6 +1,16 @@
 import * as mongoose from "mongoose";
 
+export const Schema = mongoose.Schema;
+export const ObjectId = mongoose.Schema.Types.ObjectId;
+export const Mixed = mongoose.Schema.Types.Mixed;
+
 // credit: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6
+
+export interface ITimeStampedModel extends mongoose.Document {
+    createdAt: Date
+    updatedAt: Date
+}
+
 
 export interface IRead<T> {
     retrieve: (callback: (error: any, result: any) => void) => void;

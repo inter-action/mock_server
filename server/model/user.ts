@@ -1,19 +1,14 @@
 import * as mongoose from "mongoose";
 import { Option, Some, None } from "../extend_type";
-import { RepositoryBase } from "./base"
+import { RepositoryBase, ITimeStampedModel, Schema } from "./base"
 
-export let Schema = mongoose.Schema;
-export let ObjectId = mongoose.Schema.Types.ObjectId;
-export let Mixed = mongoose.Schema.Types.Mixed;
 
 // example: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6
 
-export interface IUserModel extends mongoose.Document {
+export interface IUserModel extends ITimeStampedModel {
     username: string
     password: string
     email: string
-    createdAt: Date
-    updatedAt: Date
 }
 
 let schema = new Schema({
@@ -41,14 +36,24 @@ let schema = new Schema({
     return this;
 });
 
-export let UserSchema = mongoose.model<IUserModel>("user", schema);
+export const RawUserModel = mongoose.model<IUserModel>("user", schema);
+export class UserRepository extends RepositoryBase<IUserModel> {
+    constructor() {
+        super(RawUserModel);
+    }
+}
+
+Object.seal(UserRepository);
+
+
 
 export class UserModel {
+    private static repo: UserRepository = new UserRepository();
 
     private _userModel: IUserModel;
 
-    constructor(heroModel: IUserModel) {
-        this._userModel = heroModel;
+    constructor(model: IUserModel) {
+        this._userModel = model;
     }
 
     get username(): string {
@@ -71,35 +76,13 @@ export class UserModel {
         return await repo.create(user)
     }
 
-    static findByUsername(username: string): Promise<Option<IUserModel>> {
-        return new Promise((resolve, reject) => {
-            let repo = new UserRepository();
-
-            repo.find({ username: username }).sort({ createdAt: -1 }).limit(1).exec((err, res) => {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    if (res.length) {
-                        resolve(Some.create(res[0]));
-                    }
-                    else {
-                        resolve(None);
-                    }
-                }
-            });
-        });
+    static async findByUsername(username: string): Promise<Option<IUserModel>> {
+        let result = await UserModel.repo.find({ username: username }).sort({ createdAt: -1 }).limit(1)
+        if (result.length) return Some.create(result[0])
+        else return None;
     }
-
 }
 
 Object.seal(UserModel);
 
-export class UserRepository extends RepositoryBase<IUserModel> {
-    constructor() {
-        super(UserSchema);
-    }
-}
-
-Object.seal(UserRepository);
 

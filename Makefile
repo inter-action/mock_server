@@ -20,9 +20,12 @@ PATH_LOG := $(PATH_PRJ_ROOT)/blob/logs/myapp.log
 .PHONY: test
 
 clean:
+	rm -rf blob/logs
+	mkdir -p blob/logs
 	rm -rf build
 	
 copy-res:
+	/bin/bash ./scripts/copy-res.sh
 
 compile: clean tsc copy-res
 

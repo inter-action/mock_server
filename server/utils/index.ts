@@ -1,13 +1,17 @@
+
+
 // all as should be equal to its filename
 import * as paths from "./paths"
 import * as Constants from "./constants"
 import * as errors from "./errors";
+import * as validator from "./validator"
 
 import * as env from "./env"
 import * as io from "./io";
 
 
-export { Constants, paths, errors, env, io }
+
+export { Constants, paths, errors, env, io, validator }
 
 /*
 return `authorization: Bearer <token>` if found otherwise null
