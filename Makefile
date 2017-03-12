@@ -47,8 +47,8 @@ test-unit:
 	NODE_ENV=test TEST_OVERRIDE=test time -p ava --verbose --timeout=10s $(PATH_BUILD_ROOT)/**/*_test.js
 	
 test-functional: 
-	NODE_ENV=test ava --serial --verbose $(PATH_BUILD_TEST)/functional/with_side_effect_test.js
-	NODE_ENV=test ava --verbose $(PATH_BUILD_TEST)/functional/with_no_side_effect_test.js
+	NODE_ENV=test ava --serial --verbose $(PATH_BUILD_TEST)/functional/serial_test.js
+	NODE_ENV=test ava --verbose $(PATH_BUILD_TEST)/functional/non_serial_test.js
 
 testw: tsc
 	NODE_ENV=test mocha --recursive --watch $(PATH_BUILD_TEST) $(PATH_BUILD_ROOT)

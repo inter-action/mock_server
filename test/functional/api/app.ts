@@ -3,24 +3,11 @@ import { chai, server } from "../func_test_util";
 
 let tag = "app:";
 
-export function withSideEffect() {
-    // ava.cb(`${TAG}: register should success`, t => {
-    //     chai.request(server)
-    //         .post("/api/register")
-    //         .send({
-    //             username: "alexafdsf",
-    //             email: "243127392@qq.com",
-    //             password: "fuckyouguys"
-    //         })
-    //         .end(function (_, res) {
-    //             res.should.have.status(200);
-    //             t.end();
-    //         });
-    // })
+export function doInSerial() {
 }
 
 
-export function noSideEffect() {
+export function doInParellel() {
     ava.cb(`${tag}: create app`, t => {
         chai.request(server)
             .post("/api/app").send({
@@ -42,4 +29,56 @@ export function noSideEffect() {
                 t.end();
             });
     })
+
+
+    ava.cb(`${tag}: update app should work`, t => {
+        let agent = chai.request.agent(server);
+        agent.post("/api/app").send({ name: "some_app" }).then(resp => {
+            let _id = resp.body._id
+            return agent.put(`/api/app/${_id}`).send({ name: "some_other_app" })
+        }).then(resp => {
+            t.is(resp.status, 200);
+            t.end();
+        }).catch(e => {
+            t.fail("failed: ", e);
+            t.end();
+        })
+    })
+
+    ava.cb(`${tag}: get app should work`, t => {
+        let agent = chai.request.agent(server);
+        agent.post("/api/app").send({ name: "some_app" }).then(resp => {
+            let _id = resp.body._id
+            return agent.get(`/api/app/${_id}`)
+        }).then(resp => {
+            t.is(resp.body.name, "some_app");
+            t.end();
+        }).catch(e => {
+            t.fail("failed: ", e);
+            t.end();
+        })
+    });
+
+    ava.cb(`${tag}: delete app should work`, t => {
+        let agent = chai.request.agent(server);
+        let _id;
+        agent.post("/api/app").send({ name: "some_app" }).then(resp => {
+            _id = resp.body._id
+            return agent.del(`/api/app/${_id}`)
+        }).then(resp => {
+            t.is(resp.status, 200);
+            // couldnt return use `return agent` here, will cause `catch` to be executed
+            agent.get(`/api/app/${_id}`).end((err, resp) => {
+                t.true(err != null)
+                console.log("resp.body", resp.body)
+                console.log("resp.status", resp.status)
+                t.not(resp.status, 200);
+                t.end();
+            })
+        }).catch(e => {
+            console.log(e);
+            t.fail("failed: ", e);
+            t.end();
+        })
+    });
 }

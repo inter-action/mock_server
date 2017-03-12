@@ -1,6 +1,5 @@
 import * as mongoose from "mongoose";
 import { Option, None, Some } from "../extend_type/option";
-
 export const Schema = mongoose.Schema;
 export const ObjectId = mongoose.Schema.Types.ObjectId;
 export const Mixed = mongoose.Schema.Types.Mixed;
@@ -22,7 +21,7 @@ export interface IRead<T> {
 
 export interface IWrite<T> {
     create: (item: T) => Promise<T>;
-    update(_id: mongoose.Types.ObjectId, item: T): Promise<any>
+    update(_id: mongoose.Types.ObjectId | string, item: T): Promise<any>
     delete(_id: string): Promise<void>
 }
 
@@ -43,8 +42,11 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
         return this._raw.find({}).exec()
     }
 
-    update(_id: mongoose.Types.ObjectId, item: T): Promise<any> {
+    update(_id: mongoose.Types.ObjectId | string, item: T): Promise<any> {
         let opts = { runValidators: true };
+        if (typeof _id === "string") {
+            _id = this.toObjectId(_id)
+        }
         return this._raw.update({ _id: _id }, item, opts).exec();
     }
 

@@ -3,7 +3,7 @@ import { chai, server } from "../func_test_util";
 
 let TAG = "API_TEST:rister&login";
 
-export function withSideEffect() {
+export function doInSerial() {
     // ava.cb(`${TAG}: register should success`, t => {
     //     chai.request(server)
     //         .post("/api/register")
@@ -20,7 +20,7 @@ export function withSideEffect() {
 }
 
 
-export function noSideEffect() {
+export function doInParellel() {
     // ava.cb(`${TAG}: auth success`, t => {
     //     chai.request(server)
     //         .get("/m/some_app/a/b").query({

@@ -10,8 +10,8 @@ ava.before(async _ => {
 // runTvShowTest();
 // runRegisterTest();
 
-runWithFilter((module, key, hasSideEffect) => {
-    if (hasSideEffect) return;
+runWithFilter((module, key, isSerial) => {
+    if (isSerial) return;
     else module[key]();
 })
 

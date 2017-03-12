@@ -41,11 +41,11 @@ export function runWithFilter(cb: (module: any, key: string, hasSideEffect: bool
                 Reflect.ownKeys(module).forEach((k: string) => {
                     if (typeof module[k] !== "function") return;
 
-                    let hasSideEffect = true
-                    if (/noSideEffect$/i.test(k)) {
-                        hasSideEffect = false
+                    let isSerial = false
+                    if (/serial$/i.test(k)) {
+                        isSerial = true
                     }
-                    cb(module, k, hasSideEffect)
+                    cb(module, k, isSerial)
                 })
             }
         }

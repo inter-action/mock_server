@@ -53,7 +53,7 @@ ava(`${tag} update app should fail on invalid field`, async t => {
     t.fail("should_not_reach_here")
 });
 
-ava.only(`${tag} update should fail on invalid field #2`, async t => {
+ava(`${tag} update should fail on invalid field #2`, async t => {
     let created = await AppModel.create("some_app");
     created.name = ""
     try {
