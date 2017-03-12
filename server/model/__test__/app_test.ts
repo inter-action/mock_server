@@ -27,7 +27,7 @@ ava(`${tag} create app should fail on invalid field`, async t => {
             return t.true(error != null)
         }
     }
-    return t.fail("should not reach here")
+    return t.fail("should_not_reach_here")
 });
 
 ava(`${tag} update app should success`, async t => {
@@ -50,5 +50,26 @@ ava(`${tag} update app should fail on invalid field`, async t => {
     } catch (error) {
         return t.true(error != null)
     }
-    t.fail("should not reach here")
+    t.fail("should_not_reach_here")
 });
+
+ava.only(`${tag} update should fail on invalid field #2`, async t => {
+    let created = await AppModel.create("some_app");
+    created.name = ""
+    try {
+        await AppModel.repo.update(created._id, created)
+    } catch (error) {
+        t.true(error != null)
+        return t.pass();
+    }
+    t.fail("should_not_reach_here")
+});
+
+
+ava(`${tag} findById should work`, async t => {
+    let created = await AppModel.create("some_app");
+    let result = await AppModel.repo.findById(created._id);
+    t.true(result != null)
+});
+
+

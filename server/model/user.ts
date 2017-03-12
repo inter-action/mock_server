@@ -77,7 +77,7 @@ export class UserModel {
     }
 
     static async findByUsername(username: string): Promise<Option<IUserModel>> {
-        let result = await UserModel.repo.find({ username: username }).sort({ createdAt: -1 }).limit(1)
+        let result = await UserModel.repo._raw.find({ username: username }).sort({ createdAt: -1 }).limit(1)
         if (result.length) return Some.create(result[0])
         else return None;
     }

@@ -1,5 +1,4 @@
 import * as Router from "koa-router"
-import * as koaPassport from "koa-passport";
 import * as boom from "boom";
 
 import { validator } from "../utils";
@@ -10,12 +9,12 @@ export const apiRoutes = new Router({ prefix: "/api" })
         let payload = ctx.request.body
         if (!validator.onlyChars(payload.name)) throw boom.badRequest("name is invalid")
         else {
-            await AppModel.create(payload.name)
-            ctx.status = 200
+            ctx.body = await AppModel.create(payload.name)
         }
     })
     // return a bearer token for auth. using username & password
-    .post("/auth", koaPassport.authenticate("local", { session: false }), async (ctx) => {
+    .put("/app/:id", async (ctx) => {
+
     })
     .get("/", (ctx) => {
         ctx.body = "Hello api";

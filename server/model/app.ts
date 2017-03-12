@@ -53,9 +53,9 @@ export class AppRepository extends RepositoryBase<IAppModel> {
 Object.seal(AppRepository);
 
 export class AppModel {
-    private static repo: AppRepository = new AppRepository();
+    static readonly repo: AppRepository = new AppRepository();
 
-    private _appModel: IAppModel;
+    readonly _appModel: IAppModel;
 
     constructor(heroModel: IAppModel) {
         this._appModel = heroModel;
@@ -74,7 +74,7 @@ export class AppModel {
     }
 
     static async findByName(name: string): Promise<Option<IAppModel>> {
-        let result = await AppModel.repo.find({ name }).sort({ createdAt: -1 }).limit(1)
+        let result = await AppModel.repo._raw.find({ name }).sort({ createdAt: -1 }).limit(1)
         if (result.length) return Some.create(result[0])
         else return None;
     }
