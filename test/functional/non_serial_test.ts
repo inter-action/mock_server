@@ -1,14 +1,11 @@
 const ava = require("ava");
-
+import { connect, getConnection } from "../../server/db/mongoose";
 import { runWithFilter } from "./func_test_util"
-// import { runTvShowTest } from "./_tv_shows"
-// import { runRegisterTest } from "./_auth";
 
 ava.before(async _ => {
-});
-
-// runTvShowTest();
-// runRegisterTest();
+    await connect();
+    await getConnection().dropDatabase()
+})
 
 runWithFilter((module, key, isSerial) => {
     if (isSerial) return;

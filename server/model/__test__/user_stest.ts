@@ -1,12 +1,9 @@
 const ava = require("ava")
 
 import { UserModel } from "../user";
-import { connect } from "../../db/mongoose";
+import { test } from "../../utils"
 
-
-ava.before(async _ => {
-    await connect();
-})
+test.cleanDbAtEachTest(ava);
 
 let tag = "#User: "
 ava(`${tag} create user`, async t => {
