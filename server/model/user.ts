@@ -1,15 +1,10 @@
 import * as mongoose from "mongoose";
 import { Option, Some, None } from "../extend_type";
-import { RepositoryBase, ITimeStampedModel, Schema } from "./base"
+import { RepositoryBase, Schema, COLLECTIONS } from "./common/base"
 
+import { IUserModel } from "./common/imodel";
 
 // example: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6
-
-export interface IUserModel extends ITimeStampedModel {
-    username: string
-    password: string
-    email: string
-}
 
 let schema = new Schema({
     username: { type: String, required: true },
@@ -36,7 +31,7 @@ let schema = new Schema({
     return this;
 });
 
-export const RawUserModel = mongoose.model<IUserModel>("user", schema);
+export const RawUserModel = mongoose.model<IUserModel>(COLLECTIONS.USER, schema);
 export class UserRepository extends RepositoryBase<IUserModel> {
     constructor() {
         super(RawUserModel);
@@ -54,18 +49,6 @@ export class UserModel {
 
     constructor(model: IUserModel) {
         this._userModel = model;
-    }
-
-    get username(): string {
-        return this._userModel.username;
-    }
-
-    get password(): string {
-        return this._userModel.password;
-    }
-
-    get email() {
-        return this._userModel.email;
     }
 
     static async createUser(username: string, password: string, email: string) {

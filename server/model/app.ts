@@ -1,15 +1,13 @@
 import * as mongoose from "mongoose";
 import { Option, Some, None } from "../extend_type";
-import { RepositoryBase, ITimeStampedModel, Schema } from "./base"
+import { RepositoryBase, Schema, COLLECTIONS } from "./common/base"
 
 
 import { validator } from "../utils";
+import { IAppModel } from "./common/imodel";
 
 // example: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6
 
-export interface IAppModel extends ITimeStampedModel {
-    name: string
-}
 
 // schema validation: http://mongoosejs.com/docs/validation.html
 let schema = new Schema({
@@ -23,6 +21,7 @@ let schema = new Schema({
         },
         required: [true, "name is required"]
     },
+    cases: [{ type: Schema.Types.ObjectId, ref: COLLECTIONS.CASE }],
     createdAt: {
         type: Date,
         required: false
@@ -44,7 +43,7 @@ let schema = new Schema({
     return this;
 });
 
-export const RawAppModel = mongoose.model<IAppModel>("app", schema);
+export const RawAppModel = mongoose.model<IAppModel>(COLLECTIONS.APP, schema);
 export class AppRepository extends RepositoryBase<IAppModel> {
     constructor() {
         super(RawAppModel);
@@ -61,10 +60,6 @@ export class AppModel {
         this._appModel = heroModel;
     }
 
-    get name() {
-        return this._appModel.name
-    }
-
     static async create(name: string) {
         let repo = new AppRepository();
         let user = <IAppModel>{
@@ -79,6 +74,8 @@ export class AppModel {
         else return None;
     }
 
+
 }
+
 Object.seal(AppModel);
 

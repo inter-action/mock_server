@@ -1,15 +1,11 @@
 import * as mongoose from "mongoose";
-import { Option, None, Some } from "../extend_type/option";
+import { Option, None, Some } from "../../extend_type/option";
+
 export const Schema = mongoose.Schema;
 export const ObjectId = mongoose.Schema.Types.ObjectId;
 export const Mixed = mongoose.Schema.Types.Mixed;
 
 // credit: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6
-
-export interface ITimeStampedModel extends mongoose.Document {
-    createdAt: Date
-    updatedAt: Date
-}
 
 
 export interface IRead<T> {
@@ -54,16 +50,29 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
         return this._raw.remove({ _id: this.toObjectId(_id) }).exec();
     }
 
-    async findById(_id: string): Promise<Option<T>> {
-        let result = await this._raw.findById(_id).exec()
+    async findById(_id: string, withFields: string[] = []): Promise<Option<T>> {
+        let query = this._raw.findById(_id)
+        withFields.map(p => { query.populate(p) })
+        let result = await query.exec();
         if (result == null) return None;
         else return Some.create(result);
     }
 
-    async findOne(cond?: ModelIndex<T>): Promise<Option<T>> {
-        let result = await this._raw.findOne(cond as any).exec();
-        if (!result) return None;
-        else return Some.create(result)
+    /**
+     * 
+     * 
+     * @param {ModelIndex<T>} [cond] 
+     * @param {string[]} [populates=[]] , target model's field name
+     * @returns {Promise<Option<T>>} 
+     * 
+     * @memberOf RepositoryBase
+     */
+    async findOne(cond?: ModelIndex<T>, withFields: string[] = []): Promise<Option<T>> {
+        let query = this._raw.findOne(cond as any)
+        withFields.map(p => { query.populate(p) })
+        let result = await query.exec();
+        if (result == null) return None;
+        else return Some.create(result);
     }
 
     find(cond: ModelIndex<T>, projection?: object, options?: object): Promise<T[]> {
@@ -74,4 +83,9 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
         return mongoose.Types.ObjectId.createFromHexString(_id);
     }
 
+}
+
+
+export const COLLECTIONS = {
+    APP: "APP", CASE: "CASE", USER: "USER"
 }

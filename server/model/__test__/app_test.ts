@@ -1,14 +1,14 @@
 const ava = require("ava")
 
 import { AppModel } from "../app";
-import { connect } from "../../db/mongoose";
+import { CaseModel } from "../case";
+import { ICaseModel } from "../common/imodel";
+import { test } from "../../utils"
+
+test.cleanDbAtEachTest(ava);
 
 
-ava.before(async _ => {
-    await connect();
-})
-
-let tag = "#User: "
+let tag = "#App: "
 ava(`${tag} create app should success`, async t => {
     await AppModel.create("some_app");
     let result = await AppModel.findByName("some_app");
@@ -70,6 +70,28 @@ ava(`${tag} findById should work`, async t => {
     let created = await AppModel.create("some_app");
     let result = await AppModel.repo.findById(created._id);
     t.true(result != null)
+});
+
+ava.only(`${tag} relation should work`, async t => {
+    let created = await AppModel.create("some_app");
+    let case1 = <ICaseModel>{
+        routePath: "some/path",
+        app: created._id,
+        fullRoutePath: "some_app/some/path"
+    }
+    case1 = await CaseModel.repo.create(case1)
+    created.cases.push(case1)
+
+    let case2 = <ICaseModel>{
+        routePath: "some/path2",
+        app: created._id,
+        fullRoutePath: "some_app/some/path2"
+    }
+    case2 = await CaseModel.repo.create(case2)
+    created.cases.push(case2)
+    await created.save();
+    let result = await AppModel.repo.findById(created._id, ["cases"]);
+    t.true(result.get().cases.length === 2)
 });
 
 
