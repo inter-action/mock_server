@@ -78,8 +78,9 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
         else return Some.create(result);
     }
 
-    find(cond: ModelIndex<T>, projection?: object, options?: object): Promise<T[]> {
-        return this._raw.find(cond as any, projection as any, options as any).exec();
+    // find with decending order
+    find(cond: ModelIndex<T>, projection?: object, options?: object, sort = {}): Promise<T[]> {
+        return this._raw.find(cond as any, projection as any, options as any).sort(sort).exec();
     }
 
     toObjectId(_id: string): mongoose.Types.ObjectId {

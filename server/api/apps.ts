@@ -12,6 +12,9 @@ export const routes = new Router({ prefix: "/apps" })
     .post("/", async (ctx) => {
         let payload = ctx.request.body
         if (!validator.onlyChars(payload.name)) throw boom.badRequest(`name is invalid: ${payload.name}`)
+        // todo: naive approch, could faild under mass concurrent requests.
+        let find = await AppModel.findByName(payload.name);
+        if (find.exists()) throw boom.badRequest("duplicate app name");
         else {
             ctx.body = await AppModel.create(payload.name)
         }

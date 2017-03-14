@@ -43,6 +43,7 @@ let schema = new Schema({
     query: { type: String, validate: json_validate("query"), default: "{}" },
     body: { type: String, validate: json_validate("body"), default: "{}" },
     response: { type: String, default: "" },
+    responseType: { type: String, default: "json", enum: ["json", "text"] },
     createdAt: {
         type: Date,
         required: false
@@ -84,7 +85,7 @@ export class CaseModel {
 
 
     // default value specified at schema level
-    static async create(app: IAppModel, method: string, routePath: string, query: string = "{}", body: string = "{}", response?: string) {
+    static async create(app: IAppModel, method: string, routePath: string, query: string = "{}", body: string = "{}", response?: string, responseType?: string) {
         let repo = new CaseRepository();
         let model = <ICaseModel>{
             method: method.toLowerCase(), routePath, query, body, response, app: app._id, fullRoutePath: path.join(app.name, routePath)

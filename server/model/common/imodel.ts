@@ -24,5 +24,6 @@ export interface ICaseModel extends ITimeStampedModel {
     query: string,
     body: string,
     response: string,
+    responseType: string
 }
 
