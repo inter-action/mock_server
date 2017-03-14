@@ -6,6 +6,9 @@ import { AppModel } from "../model"
 
 
 export const routes = new Router({ prefix: "/app" })
+    .get("/", async ctx => {
+        ctx.body = await AppModel.repo.find({})
+    })
     .post("/", async (ctx) => {
         let payload = ctx.request.body
         if (!validator.onlyChars(payload.name)) throw boom.badRequest("name is invalid")

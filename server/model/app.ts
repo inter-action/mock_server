@@ -13,6 +13,7 @@ import { IAppModel } from "./common/imodel";
 let schema = new Schema({
     name: {
         type: String,
+        unique: true,
         validate: {
             validator: function (v) {
                 return validator.onlyChars(v);
@@ -54,18 +55,18 @@ Object.seal(AppRepository);
 export class AppModel {
     static readonly repo: AppRepository = new AppRepository();
 
-    readonly _appModel: IAppModel;
+    readonly _model: IAppModel;
 
-    constructor(heroModel: IAppModel) {
-        this._appModel = heroModel;
+    constructor(model: IAppModel) {
+        this._model = model;
     }
 
     static async create(name: string) {
         let repo = new AppRepository();
-        let user = <IAppModel>{
+        let model = <IAppModel>{
             name
         };
-        return await repo.create(user)
+        return await repo.create(model)
     }
 
     static async findByName(name: string): Promise<Option<IAppModel>> {

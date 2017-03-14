@@ -45,18 +45,18 @@ Object.seal(UserRepository);
 export class UserModel {
     private static repo: UserRepository = new UserRepository();
 
-    private _userModel: IUserModel;
+    private _model: IUserModel;
 
     constructor(model: IUserModel) {
-        this._userModel = model;
+        this._model = model;
     }
 
     static async createUser(username: string, password: string, email: string) {
         let repo = new UserRepository();
-        let user = <IUserModel>{
+        let model = <IUserModel>{
             username, password, email
         };
-        return await repo.create(user)
+        return await repo.create(model)
     }
 
     static async findByUsername(username: string): Promise<Option<IUserModel>> {

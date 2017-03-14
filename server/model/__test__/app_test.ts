@@ -30,6 +30,17 @@ ava.serial(`${tag} create app should fail on invalid field`, async t => {
     return t.fail("should_not_reach_here")
 });
 
+ava.only.serial(`${tag} create app should fail on duplicate record`, async t => {
+    await AppModel.create("some_app");
+    try {
+        await AppModel.create("some_app");
+    } catch (error) {
+        return t.true(error != null)
+    }
+    return t.fail("should_not_reach_here")
+});
+
+
 ava.serial(`${tag} update app should success`, async t => {
     await AppModel.create("some_app");
     let result = await AppModel.findByName("some_app");
@@ -125,7 +136,7 @@ ava.serial(`${tag} relation, delete should affect on both end #1`, async t => {
 });
 
 
-ava.only.serial(`${tag} relation, delete should affect on both end #2`, async t => {
+ava.serial(`${tag} relation, delete should affect on both end #2`, async t => {
     let created = await AppModel.create("some_app");
     let case1 = <ICaseModel>{
         method: "get",
