@@ -50,5 +50,15 @@ export const routes = new Router({ prefix: "/cases" })
         await CaseModel.repo.update(ctx.params.id, _case)
         ctx.status = 200;
     })
-
+    .delete("/:id", async ctx => {
+        if (!ctx.params.id) throw boom.badRequest("id_is_required")
+        await CaseModel.repo.delete(ctx.params.id)
+        ctx.status = 200;
+    })
+    .get("/:id", async ctx => {
+        if (!ctx.params.id) throw boom.badRequest("id_is_required")
+        let option = await CaseModel.repo.findById(ctx.params.id);
+        if (option.isEmpty()) throw boom.badRequest("no_entity_found")
+        else ctx.body = option.get()
+    })
 
