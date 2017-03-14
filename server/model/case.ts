@@ -17,9 +17,18 @@ const json_validate = (field) => {
     }
 }
 
+
 // schema validation: http://mongoosejs.com/docs/validation.html
 let schema = new Schema({
     app: { type: Schema.Types.ObjectId, ref: COLLECTIONS.APP },
+    method: {
+        type: String, validate: {
+            validator: function (v) {
+                return validator.isHttpMethod(v);
+            },
+            message: "{VALUE} is not a valid http method"
+        }, required: true
+    },
     routePath: {
         type: String,
         validate: {
@@ -74,10 +83,10 @@ export class CaseModel {
     }
 
     // default value specified at schema level
-    static async create(app: IAppModel, routePath: string, query?: string, body?: string, response?: string) {
+    static async create(app: IAppModel, method: string, routePath: string, query: string = "{}", body: string = "{}", response?: string) {
         let repo = new CaseRepository();
         let model = <ICaseModel>{
-            routePath, query, body, response, app: app._id, fullRoutePath: path.join(app.name, routePath)
+            method: method.toLowerCase(), routePath, query, body, response, app: app._id, fullRoutePath: path.join(app.name, routePath)
         };
         let saved = await repo.create(model)
         app.cases.push(saved)

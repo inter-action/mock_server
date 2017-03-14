@@ -18,6 +18,7 @@ export interface IAppModel extends ITimeStampedModel {
 
 export interface ICaseModel extends ITimeStampedModel {
     app: any,
+    method: string,
     fullRoutePath: string, // used to case db read
     routePath: string,
     query: string,

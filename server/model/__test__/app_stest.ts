@@ -72,9 +72,10 @@ ava(`${tag} findById should work`, async t => {
     t.true(result != null)
 });
 
-ava.only(`${tag} relation should work`, async t => {
+ava(`${tag} relation should work`, async t => {
     let created = await AppModel.create("some_app");
     let case1 = <ICaseModel>{
+        method: "get",
         routePath: "some/path",
         app: created._id,
         fullRoutePath: "some_app/some/path"
@@ -83,6 +84,7 @@ ava.only(`${tag} relation should work`, async t => {
     created.cases.push(case1)
 
     let case2 = <ICaseModel>{
+        method: "get",
         routePath: "some/path2",
         app: created._id,
         fullRoutePath: "some_app/some/path2"
