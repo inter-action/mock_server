@@ -39,7 +39,6 @@ koa.use(async (ctx, next) => {
     logger.info(`${ctx.method} ${ctx.url} - ${ms}ms`);
 })
     .use(createErrMiddleware())
-
     .use(views(path.resolve(__dirname, "../views"), { extension: "ejs", map: { ejs: "ejs" }, }))
     .use(bodyParser({ jsonLimit: "1kb" }))
     .use(convert(session()))

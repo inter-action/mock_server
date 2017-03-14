@@ -12,7 +12,7 @@ export async function connect() {
     if (hasConnected) return Promise.resolve();
     else {
         return new Promise((resolve, reject) => {
-            mongoose.connect(dburl, (err) => {
+            mongoose.connect(dburl, { config: { autoIndex: true } }, (err) => {
                 if (err) {
                     logger.error("failed to connect mongodb: ", err)
                     reject(err)

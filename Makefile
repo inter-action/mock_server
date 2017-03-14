@@ -45,6 +45,7 @@ inspect:
 test: clean compile test-unit test-functional
 	
 test-unit:
+	NODE_ENV=test TEST_OVERRIDE=test time -p ava --verbose --timeout=10s --serial $(PATH_BUILD_ROOT)/**/*_stest.js
 	NODE_ENV=test TEST_OVERRIDE=test time -p ava --verbose --timeout=10s $(PATH_BUILD_ROOT)/**/*_test.js
 	
 test-functional: 

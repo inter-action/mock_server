@@ -5,13 +5,13 @@ import { validator } from "../utils";
 import { AppModel } from "../model"
 
 
-export const routes = new Router({ prefix: "/app" })
+export const routes = new Router({ prefix: "/apps" })
     .get("/", async ctx => {
         ctx.body = await AppModel.repo.find({})
     })
     .post("/", async (ctx) => {
         let payload = ctx.request.body
-        if (!validator.onlyChars(payload.name)) throw boom.badRequest("name is invalid")
+        if (!validator.onlyChars(payload.name)) throw boom.badRequest(`name is invalid: ${payload.name}`)
         else {
             ctx.body = await AppModel.create(payload.name)
         }

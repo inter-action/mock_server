@@ -7,7 +7,7 @@ import { test } from "../../utils"
 test.cleanDbAtEachTest(ava);
 
 let tag = "#Case: "
-ava.serial(`${tag} create case should success`, async t => {
+ava(`${tag} create case should success`, async t => {
     let saved = await AppModel.create("some_app");
     let saved_case = await CaseModel.create(saved, "get", "some/path", `{"name": "alex"}`, `{"body": "ok"}`, "some_resonse")
     t.is(saved_case.fullRoutePath, "some_app/some/path")

@@ -10,17 +10,17 @@ import { IAppModel } from "./common/imodel";
 
 
 // schema validation: http://mongoosejs.com/docs/validation.html
+// schema optiosn: http://mongoosejs.com/docs/guide.html
 let schema = new Schema({
     name: {
         type: String,
-        unique: true,
+        required: true,
         validate: {
             validator: function (v) {
                 return validator.onlyChars(v);
             },
             message: "name={VALUE} is invalid!"
         },
-        required: [true, "name is required"]
     },
     cases: [{ type: Schema.Types.ObjectId, ref: COLLECTIONS.CASE }],
     createdAt: {

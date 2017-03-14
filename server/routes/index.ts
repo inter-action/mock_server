@@ -1,16 +1,13 @@
 import * as Boom from "boom";
 import { apiRoutes } from "../api"
 import { appRouts } from "./app_routes";
+import { router as mRouter } from "./m_routes";
 
-
-export const Routes = {
-    api: apiRoutes,
-    app: appRouts
-}
 
 
 export function initRoutes(app: any) {
-    appRouts.use(Routes.api.routes())
+    appRouts.use(apiRoutes.routes())
+    appRouts.use(mRouter.routes())
     app
         .use(appRouts.routes())
         .use(appRouts.allowedMethods({
