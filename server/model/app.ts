@@ -11,10 +11,12 @@ import { IAppModel } from "./common/imodel";
 
 // schema validation: http://mongoosejs.com/docs/validation.html
 // schema optiosn: http://mongoosejs.com/docs/guide.html
+// mongodb index: https://docs.mongodb.com/manual/indexes/#Indexes-CompoundKeys
 let schema = new Schema({
     name: {
         type: String,
         required: true,
+        index: true,
         validate: {
             validator: function (v) {
                 return validator.onlyChars(v);
