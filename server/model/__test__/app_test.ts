@@ -97,3 +97,60 @@ ava.serial(`${tag} relation should work`, async t => {
 });
 
 
+ava.serial(`${tag} relation, delete should affect on both end #1`, async t => {
+    let created = await AppModel.create("some_app");
+    let case1 = <ICaseModel>{
+        method: "get",
+        routePath: "some/path",
+        app: created._id,
+        fullRoutePath: "some_app/some/path"
+    }
+    case1 = await CaseModel.repo.create(case1)
+    created.cases.push(case1)
+
+    let case2 = <ICaseModel>{
+        method: "get",
+        routePath: "some/path2",
+        app: created._id,
+        fullRoutePath: "some_app/some/path2"
+    }
+    case2 = await CaseModel.repo.create(case2)
+    created.cases.push(case2)
+    await created.save();
+    let result = await AppModel.repo.findById(created._id, ["cases"]);
+    t.true(result.get().cases.length === 2)
+    await CaseModel.repo.delete(case2._id);
+    result = await AppModel.repo.findById(created._id, ["cases"]);
+    t.true(result.get().cases.length === 1)
+});
+
+
+ava.only.serial(`${tag} relation, delete should affect on both end #2`, async t => {
+    let created = await AppModel.create("some_app");
+    let case1 = <ICaseModel>{
+        method: "get",
+        routePath: "some/path",
+        app: created._id,
+        fullRoutePath: "some_app/some/path"
+    }
+    case1 = await CaseModel.repo.create(case1)
+    created.cases.push(case1)
+
+    let case2 = <ICaseModel>{
+        method: "get",
+        routePath: "some/path2",
+        app: created._id,
+        fullRoutePath: "some_app/some/path2"
+    }
+    case2 = await CaseModel.repo.create(case2)
+    created.cases.push(case2)
+    await created.save();
+
+    await AppModel.repo.delete(created._id);
+
+    let _case = await CaseModel.repo.findById(case2._id, ["app"])
+    t.true(_case.get().app === null)
+    t.true(_case.get().routePath === "some/path2")
+});
+
+

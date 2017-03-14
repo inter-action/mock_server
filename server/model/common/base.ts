@@ -18,7 +18,7 @@ export interface IRead<T> {
 export interface IWrite<T> {
     create: (item: T) => Promise<T>;
     update(_id: mongoose.Types.ObjectId | string, item: T): Promise<any>
-    delete(_id: string): Promise<void>
+    delete(_id: mongoose.Types.ObjectId | string): Promise<void>
 }
 
 type ModelIndex<T> = {[P in keyof T]?: T[P]}
@@ -46,8 +46,11 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
         return this._raw.update({ _id: _id }, item, opts).exec();
     }
 
-    delete(_id: string): Promise<void> {
-        return this._raw.remove({ _id: this.toObjectId(_id) }).exec();
+    delete(_id: mongoose.Types.ObjectId | string): Promise<void> {
+        if (typeof _id === "string") {
+            _id = this.toObjectId(_id)
+        }
+        return this._raw.remove({ _id: _id }).exec();
     }
 
     async findById(_id: string, withFields: string[] = []): Promise<Option<T>> {
