@@ -9,13 +9,13 @@ test.cleanDbAtEachTest(ava);
 
 
 let tag = "#App: "
-ava(`${tag} create app should success`, async t => {
+ava.serial(`${tag} create app should success`, async t => {
     await AppModel.create("some_app");
     let result = await AppModel.findByName("some_app");
     if (result.isEmpty()) throw new Error("insertion failed")
 });
 
-ava(`${tag} create app should fail on invalid field`, async t => {
+ava.serial(`${tag} create app should fail on invalid field`, async t => {
     try {
         await AppModel.create("some.@app");
     } catch (error) {
@@ -30,7 +30,7 @@ ava(`${tag} create app should fail on invalid field`, async t => {
     return t.fail("should_not_reach_here")
 });
 
-ava(`${tag} update app should success`, async t => {
+ava.serial(`${tag} update app should success`, async t => {
     await AppModel.create("some_app");
     let result = await AppModel.findByName("some_app");
     let saved = result.get()
@@ -40,7 +40,7 @@ ava(`${tag} update app should success`, async t => {
 });
 
 
-ava(`${tag} update app should fail on invalid field`, async t => {
+ava.serial(`${tag} update app should fail on invalid field`, async t => {
     await AppModel.create("some_app");
     let result = await AppModel.findByName("some_app");
     let saved = result.get()
@@ -53,7 +53,7 @@ ava(`${tag} update app should fail on invalid field`, async t => {
     t.fail("should_not_reach_here")
 });
 
-ava(`${tag} update should fail on invalid field #2`, async t => {
+ava.serial(`${tag} update should fail on invalid field #2`, async t => {
     let created = await AppModel.create("some_app");
     created.name = ""
     try {
@@ -66,13 +66,13 @@ ava(`${tag} update should fail on invalid field #2`, async t => {
 });
 
 
-ava(`${tag} findById should work`, async t => {
+ava.serial(`${tag} findById should work`, async t => {
     let created = await AppModel.create("some_app");
     let result = await AppModel.repo.findById(created._id);
     t.true(result != null)
 });
 
-ava(`${tag} relation should work`, async t => {
+ava.serial(`${tag} relation should work`, async t => {
     let created = await AppModel.create("some_app");
     let case1 = <ICaseModel>{
         method: "get",

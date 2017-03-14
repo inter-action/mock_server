@@ -6,7 +6,7 @@ import { test } from "../../utils"
 test.cleanDbAtEachTest(ava);
 
 let tag = "#User: "
-ava(`${tag} create user`, async t => {
+ava.serial(`${tag} create user`, async t => {
     await UserModel.createUser("Steve", "Flying", "someemail@qq.com");
     let result = await UserModel.findByUsername("Steve");
     if (result.isEmpty()) throw new Error("insertion failed")
