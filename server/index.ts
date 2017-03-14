@@ -39,13 +39,7 @@ koa.use(async (ctx, next) => {
     logger.info(`${ctx.method} ${ctx.url} - ${ms}ms`);
 })
     .use(createErrMiddleware())
-    .use(async function (ctx, next) {
-        if (/\.js$|\.css$/.test(ctx.path)) {
-            await send(ctx, ctx.path, { root: path.resolve(__dirname, "../../client/dist") });
-        } else {
-            await next();
-        }
-    })
+
     .use(views(path.resolve(__dirname, "../views"), { extension: "ejs", map: { ejs: "ejs" }, }))
     .use(bodyParser({ jsonLimit: "1kb" }))
     .use(convert(session()))
@@ -62,7 +56,14 @@ koa.use(async (ctx, next) => {
 
 initRoutes(koa);
 
-
+// use for fallback, if upstream doesnt set a response, naively presume this as a request for as static file
+koa.use(async function (ctx, next) {
+    if (/^\/api|^\/_m/.test(ctx.path)) { // skip protect path
+        await next();
+    } else if (/\.\w+$/.test(ctx.path)) {
+        await send(ctx, ctx.path, { root: path.resolve(__dirname, "../../client/dist") });
+    }
+})
 
 
 // handle uncaught error. replace console with logger

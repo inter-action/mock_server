@@ -26,6 +26,7 @@ clean:
 	
 copy-res:
 	/bin/bash ./scripts/copy-res.sh
+	cp -r views build
 
 compile: clean tsc copy-res
 

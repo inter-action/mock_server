@@ -1,5 +1,8 @@
 import * as Router from "koa-router";
+import { paths } from "../utils/index";
 const passport = require("koa-passport");
+
+import { logger } from "../logging";
 
 export const appRouts = new Router()
 
@@ -29,8 +32,19 @@ appRouts.post("/login", async (ctx, next) => {
     }
 })
 
+let createReactMiddleware = require(paths.clientPath("routes/server")).default;
+appRouts.get(/\.html$/g, async (ctx, next) => {
+    // pass data down to reatjs component
+    ctx.serverData = { "username": "alexander" };
+    await next();
+}, createReactMiddleware(logger));
 
 // has to be put in the last. Otherwise this route would get matched before others
 appRouts.get("/", async (ctx) => {
-    ctx.body = "hello koa"
+    ctx.redirect("/index.html");
+    // let option: any = {}
+    // if (ctx.req.user) {
+    //     option.user = ctx.req.user
+    // }
+    // await ctx.render("index", option);
 })
