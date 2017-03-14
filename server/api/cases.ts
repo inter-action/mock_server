@@ -19,15 +19,15 @@ function checkJSONField(value) {
 }
 
 export const routes = new Router({ prefix: "/cases" })
-    .post("/:appid", async (ctx) => {
-        let payload = ctx.request.body as ICaseModel;
-        if (!ctx.params.appid) throw boom.badRequest("id is required");
+    .post("/", async (ctx) => {
+        let payload = ctx.request.body;
+        if (!payload.appid) throw boom.badRequest("appid is required");
+        payload = payload as ICaseModel
         if (!validator.isHttpMethod(payload.method)) throw boom.badRequest("method is required");
         if (!payload.routePath) throw boom.badRequest("route path is required");
         if (!checkJSONField(payload.query)) throw boom.badRequest("query field is invalid");
         if (!checkJSONField(payload.body)) throw boom.badRequest("body field is invalid");
-
-        let app = await AppModel.repo.findById(ctx.params.appid);
+        let app = await AppModel.repo.findById(payload.appid);
         if (app.isEmpty()) throw boom.badRequest("invalid id");
         let created;
         let method = payload.method.toLowerCase()
@@ -39,4 +39,16 @@ export const routes = new Router({ prefix: "/cases" })
             created = await CaseModel.create(app.get(), method, payload.routePath, payload.query, payload.body, payload.response)
         }
         ctx.body = created;
+    }).put("/:id", async (ctx) => {
+        if (!ctx.params.id) throw boom.badRequest("id_is_required")
+        let payload = ctx.request.body;
+        // update app relation is not allowed;
+        let _case = payload as ICaseModel;
+        delete _case.app
+        // todo: extract this
+        delete _case._id;
+        await CaseModel.repo.update(ctx.params.id, _case)
+        ctx.status = 200;
     })
+
+

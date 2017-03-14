@@ -12,7 +12,7 @@ runWithFilter((module, key, isSerial) => {
     else module[key]();
 })
 
-ava(`dumb test`, t => {
+ava(`dumb test prevent ava from abnormal shutdown`, t => {
     t.is(1, 1);
 });
 

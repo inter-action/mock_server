@@ -76,11 +76,12 @@ Object.seal(CaseRepository);
 export class CaseModel {
     static readonly repo: CaseRepository = new CaseRepository();
 
-    readonly _appModel: ICaseModel;
+    readonly _model: ICaseModel;
 
-    constructor(heroModel: ICaseModel) {
-        this._appModel = heroModel;
+    constructor(model: ICaseModel) {
+        this._model = model;
     }
+
 
     // default value specified at schema level
     static async create(app: IAppModel, method: string, routePath: string, query: string = "{}", body: string = "{}", response?: string) {

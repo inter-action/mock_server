@@ -23,6 +23,7 @@ export const routes = new Router({ prefix: "/app" })
         let payload = ctx.request.body;
         let option = await AppModel.repo.findById(ctx.params.id)
         if (option.isEmpty()) throw boom.badRequest("no_entity_found")
+        delete payload._id
         await AppModel.repo.update(ctx.params.id, payload)
         ctx.status = 200;
     })
