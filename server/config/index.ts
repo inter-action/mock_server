@@ -2,7 +2,6 @@ import * as path from "path";
 
 
 import { logger, initLogger } from "../logging";
-import { ENV } from "../utils/env";
 import { connect } from "../db";
 
 export async function initConfig() {

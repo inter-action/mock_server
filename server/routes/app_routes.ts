@@ -1,5 +1,4 @@
 import * as Router from "koa-router";
-import * as boom from "boom";
 const passport = require("koa-passport");
 
 export const appRouts = new Router()

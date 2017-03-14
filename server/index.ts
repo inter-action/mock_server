@@ -53,7 +53,7 @@ koa.use(async (ctx, next) => {
     // extract data with key `passport._key` from session
     // passport._key is the result of `serializeUser`
     .use(passport.initialize())
-    // passport core lib include a session strategy. on success it would set a serialized user 
+    // passport core lib include a session strategy. on success it would set a serialized user
     // on req object.
     // var property = req._passport.instance._userProperty || "user";
     // req[property] = user;
@@ -65,7 +65,7 @@ initRoutes(koa);
 
 
 
-// handle uncaught error. replace console with logger 
+// handle uncaught error. replace console with logger
 koa.on("error", function (error: any) {
     // skip logging HttpError all together
     // todo: find a better way to discriminate HttpError

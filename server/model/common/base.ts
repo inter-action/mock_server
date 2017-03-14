@@ -62,12 +62,12 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
     }
 
     /**
-     * 
-     * 
-     * @param {ModelIndex<T>} [cond] 
+     *
+     *
+     * @param {ModelIndex<T>} [cond]
      * @param {string[]} [populates=[]] , target model's field name
-     * @returns {Promise<Option<T>>} 
-     * 
+     * @returns {Promise<Option<T>>}
+     *
      * @memberOf RepositoryBase
      */
     async findOne(cond?: ModelIndex<T>, withFields: string[] = []): Promise<Option<T>> {

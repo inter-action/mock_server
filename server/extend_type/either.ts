@@ -8,7 +8,7 @@ export abstract class Either<L, R> {
 }
 
 
-export class Left<L, R> extends Either<L, R>{
+export class Left<L, R> extends Either<L, R> {
     constructor(private value: L) {
         super()
     }
@@ -40,7 +40,7 @@ export class Left<L, R> extends Either<L, R>{
 
 
 
-export class Right<L, R> extends Either<L, R>{
+export class Right<L, R> extends Either<L, R> {
     constructor(private value: R) {
         super()
     }

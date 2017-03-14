@@ -1,6 +1,5 @@
 const ava = require("ava");
 
-import { ENV_UTILS } from "../env";
 import { configEnv } from "../../config";
 
 let origin_env = process.env;

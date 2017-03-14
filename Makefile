@@ -71,7 +71,7 @@ tsct:
 # create lint by
 # tslint --init
 lint:
-	tslint --format verbose --project .
+	tslint --type-check --project tsconfig.json --format verbose
 
 readlog:
 	tail -f $(PATH_LOG) | pino -lt
