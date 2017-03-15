@@ -15,7 +15,7 @@ router.all("*", async ctx => {
     let path = ctx.path;
     let payload = ctx.request.body;
     let req_method = ctx.method.toLowerCase();
-    let cases = await CaseModel.repo.find({ fullRoutePath: path.replace("/_m/", ""), method: req_method }, undefined, undefined, { modifiedAt: -1 });
+    let cases = await CaseModel.repo.find({ fullRoutePath: path.replace("/_m/", ""), method: req_method }, undefined, undefined, { updatedAt: -1 });
     if (cases.length === 0) throw boom.notFound("no_case_found");
     else {
         let compare;

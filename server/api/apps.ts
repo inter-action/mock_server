@@ -7,7 +7,7 @@ import { AppModel } from "../model"
 
 export const routes = new Router({ prefix: "/apps" })
     .get("/", async ctx => {
-        ctx.body = await AppModel.repo.find({})
+        ctx.body = await AppModel.repo.find({}, undefined, undefined, { updatedAt: -1 })
     })
     .post("/", async (ctx) => {
         let payload = ctx.request.body

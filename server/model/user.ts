@@ -14,7 +14,7 @@ let schema = new Schema({
         type: Date,
         required: false
     },
-    modifiedAt: {
+    updatedAt: {
         type: Date,
         required: false
     }
