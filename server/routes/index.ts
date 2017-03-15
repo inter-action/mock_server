@@ -6,9 +6,12 @@ import { appRouts } from "./app_routes";
 import { router as mRouter } from "./m_routes";
 
 
+const corsOption = {
+    origin: "*",
+}
 
 export function initRoutes(app: any) {
-    appRouts.use(cors({ origin: "*" }), apiRoutes.routes())
+    appRouts.use(cors(corsOption), apiRoutes.routes())
     appRouts.use(mRouter.routes())
     app
         .use(appRouts.routes())
