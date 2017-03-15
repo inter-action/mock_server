@@ -2,7 +2,7 @@ import * as Router from "koa-router"
 import * as boom from "boom";
 
 import { validator } from "../utils";
-import { AppModel } from "../model"
+import { AppModel, IAppModel } from "../model"
 
 
 export const routes = new Router({ prefix: "/apps" })
@@ -29,8 +29,10 @@ export const routes = new Router({ prefix: "/apps" })
         let payload = ctx.request.body;
         let option = await AppModel.repo.findById(ctx.params.id)
         if (option.isEmpty()) throw boom.badRequest("no_entity_found")
-        delete payload._id
-        await AppModel.repo.update(ctx.params.id, payload)
+        let iapp = payload as IAppModel;
+        delete iapp._id
+        delete iapp.cases
+        await AppModel.repo.update(ctx.params.id, iapp)
         ctx.status = 200;
     })
     .delete("/:id", async ctx => {
@@ -40,7 +42,7 @@ export const routes = new Router({ prefix: "/apps" })
     })
     .get("/:id", async ctx => {
         if (!ctx.params.id) throw boom.badRequest("id_is_required")
-        let option = await AppModel.repo.findById(ctx.params.id);
+        let option = await AppModel.repo.findById(ctx.params.id, ["cases"]);
         if (option.isEmpty()) throw boom.badRequest("no_entity_found")
         else ctx.body = option.get()
     })

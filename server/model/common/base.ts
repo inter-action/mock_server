@@ -53,7 +53,7 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
         return this._raw.remove({ _id: _id }).exec();
     }
 
-    async findById(_id: string, withFields: string[] = []): Promise<Option<T>> {
+    async findById(_id: string, withFields: any[] = []): Promise<Option<T>> {
         let query = this._raw.findById(_id)
         withFields.map(p => { query.populate(p) })
         let result = await query.exec();

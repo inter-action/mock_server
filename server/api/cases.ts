@@ -44,11 +44,11 @@ export const routes = new Router({ prefix: "/cases" })
         if (!ctx.params.id) throw boom.badRequest("id_is_required")
         let payload = ctx.request.body;
         // update app relation is not allowed;
-        let _case = payload as ICaseModel;
-        delete _case.app
+        let icase = payload as ICaseModel;
+        delete icase.app
         // todo: extract this
-        delete _case._id;
-        await CaseModel.repo.update(ctx.params.id, _case)
+        delete icase._id;
+        await CaseModel.repo.update(ctx.params.id, icase)
         ctx.status = 200;
     })
     .delete("/:id", async ctx => {
@@ -58,8 +58,8 @@ export const routes = new Router({ prefix: "/cases" })
     })
     .get("/:id", async ctx => {
         if (!ctx.params.id) throw boom.badRequest("id_is_required")
-        let option = await CaseModel.repo.findById(ctx.params.id);
-        if (option.isEmpty()) throw boom.badRequest("no_entity_found")
+        let option = await CaseModel.repo.findById(ctx.params.id, [{ path: "app", select: "name" }]);
+        if (option.isEmpty()) throw boom.notFound("no_entity_found")
         else ctx.body = option.get()
     })
 
