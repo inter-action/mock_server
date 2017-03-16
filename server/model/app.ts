@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { Option, Some, None } from "../extend_type";
-import { RepositoryBase, Schema, COLLECTIONS } from "./common/base"
+import { RepositoryBase, Schema, COLLECTIONS, decorateWithTimestamp } from "./common/base"
 
 
 import { validator } from "../utils";
@@ -25,28 +25,10 @@ let schema = new Schema({
         },
     },
     cases: [{ type: Schema.Types.ObjectId, ref: COLLECTIONS.CASE }],
-    createdAt: {
-        type: Date,
-        required: false
-    },
-    updatedAt: {
-        type: Date,
-        required: false
-    }
-}).pre("save", function (next) {
-    if (this._doc) {
-        let doc = <IAppModel>this._doc;
-        let now = new Date();
-        if (!doc.createdAt) {
-            doc.createdAt = now;
-        }
-        doc.updatedAt = now;
-    }
-    next();
-    return this;
-});
+})
 
-export const RawAppModel = mongoose.model<IAppModel>(COLLECTIONS.APP, schema);
+
+export const RawAppModel = mongoose.model<IAppModel>(COLLECTIONS.APP, decorateWithTimestamp(schema));
 export class AppRepository extends RepositoryBase<IAppModel> {
     constructor() {
         super(RawAppModel);

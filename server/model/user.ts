@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { Option, Some, None } from "../extend_type";
-import { RepositoryBase, Schema, COLLECTIONS } from "./common/base"
+import { RepositoryBase, Schema, COLLECTIONS, decorateWithTimestamp } from "./common/base"
 
 import { IUserModel } from "./common/imodel";
 
@@ -10,28 +10,9 @@ let schema = new Schema({
     username: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
-    createdAt: {
-        type: Date,
-        required: false
-    },
-    updatedAt: {
-        type: Date,
-        required: false
-    }
-}).pre("save", function (next) {
-    if (this._doc) {
-        let doc = <IUserModel>this._doc;
-        let now = new Date();
-        if (!doc.createdAt) {
-            doc.createdAt = now;
-        }
-        doc.updatedAt = now;
-    }
-    next();
-    return this;
-});
+})
 
-export const RawUserModel = mongoose.model<IUserModel>(COLLECTIONS.USER, schema);
+export const RawUserModel = mongoose.model<IUserModel>(COLLECTIONS.USER, decorateWithTimestamp(schema));
 export class UserRepository extends RepositoryBase<IUserModel> {
     constructor() {
         super(RawUserModel);

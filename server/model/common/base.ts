@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import { Option, None, Some } from "../../extend_type/option";
+import * as middleware from "./middleware"
 
 export const Schema = mongoose.Schema;
 export const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -92,4 +93,22 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
 
 export const COLLECTIONS = {
     APP: "APP", CASE: "CASE", USER: "USER"
+}
+
+
+export function decorateWithTimestamp(schema: mongoose.Schema) {
+    schema.add({
+        createdAt: {
+            type: Date,
+            required: false
+        },
+        updatedAt: {
+            type: Date,
+            required: false
+        }
+    })
+
+    schema.pre("save", middleware.timestamp)
+
+    return schema;
 }

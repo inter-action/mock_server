@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as mongoose from "mongoose";
-import { RepositoryBase, Schema, COLLECTIONS } from "./common/base"
+import { RepositoryBase, Schema, COLLECTIONS, decorateWithTimestamp } from "./common/base"
 
 
 import { validator } from "../utils";
@@ -44,28 +44,9 @@ let schema = new Schema({
     body: { type: String, validate: json_validate("body"), default: "{}" },
     response: { type: String, default: "" },
     responseType: { type: String, default: "json", enum: ["json", "text"] },
-    createdAt: {
-        type: Date,
-        required: false
-    },
-    updatedAt: {
-        type: Date,
-        required: false
-    }
-}).pre("save", function (next) {
-    if (this._doc) {
-        let doc = <ICaseModel>this._doc;
-        let now = new Date();
-        if (!doc.createdAt) {
-            doc.createdAt = now;
-        }
-        doc.updatedAt = now;
-    }
-    next();
-    return this;
 });
 
-export const RawCaseModel = mongoose.model<ICaseModel>(COLLECTIONS.CASE, schema);
+export const RawCaseModel = mongoose.model<ICaseModel>(COLLECTIONS.CASE, decorateWithTimestamp(schema));
 export class CaseRepository extends RepositoryBase<ICaseModel> {
     constructor() {
         super(RawCaseModel);
