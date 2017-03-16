@@ -1,5 +1,5 @@
 const ava = require("ava");
-import { chai, server } from "../func_test_util";
+import { chai, server, getAppName } from "../func_test_util";
 
 let tag = "app:";
 
@@ -11,7 +11,7 @@ export function doInParellel() {
     ava.cb(`${tag}: create app`, t => {
         chai.request(server)
             .post("/api/apps").send({
-                name: "some_app",
+                name: getAppName(),
             })
             .end(function (_, res) {
                 t.is(res.status, 200);
@@ -33,7 +33,7 @@ export function doInParellel() {
 
     ava.cb(`${tag}: update app should work`, t => {
         let agent = chai.request.agent(server);
-        agent.post("/api/apps").send({ name: "some_app" }).then(resp => {
+        agent.post("/api/apps").send({ name: getAppName() }).then(resp => {
             let _id = resp.body._id
             return agent.put(`/api/apps/${_id}`).send({ name: "some_other_app" })
         }).then(resp => {
@@ -47,11 +47,12 @@ export function doInParellel() {
 
     ava.cb(`${tag}: get app should work`, t => {
         let agent = chai.request.agent(server);
-        agent.post("/api/apps").send({ name: "some_app" }).then(resp => {
+        let appname = getAppName()
+        agent.post("/api/apps").send({ name: appname }).then(resp => {
             let _id = resp.body._id
             return agent.get(`/api/apps/${_id}`)
         }).then(resp => {
-            t.is(resp.body.name, "some_app");
+            t.is(resp.body.name, appname);
             t.end();
         }).catch(e => {
             t.fail("failed: ", e);
@@ -62,7 +63,7 @@ export function doInParellel() {
     ava.cb(`${tag}: delete app should work`, t => {
         let agent = chai.request.agent(server);
         let _id;
-        agent.post("/api/apps").send({ name: "some_app" }).then(resp => {
+        agent.post("/api/apps").send({ name: getAppName() }).then(resp => {
             _id = resp.body._id
             return agent.del(`/api/apps/${_id}`)
         }).then(resp => {

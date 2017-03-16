@@ -1,8 +1,9 @@
 import * as path from "path";
 import * as mongoose from "mongoose";
-import { RepositoryBase, Schema, COLLECTIONS, decorateWithTimestamp } from "./common/base"
 
 
+import { COLLECTIONS } from "../db/mongoose"
+import { RepositoryBase, Schema, decorateWithTimestamp } from "./common/base"
 import { validator } from "../utils";
 import { ICaseModel, IAppModel } from "./common/imodel";
 // example: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6
@@ -20,14 +21,16 @@ const json_validate = (field) => {
 
 // schema validation: http://mongoosejs.com/docs/validation.html
 let schema = new Schema({
-    app: { type: Schema.Types.ObjectId, ref: COLLECTIONS.APP },
+    app: { type: Schema.Types.ObjectId, ref: COLLECTIONS.app },
     method: {
-        type: String, validate: {
+        type: String,
+        validate: {
             validator: function (v) {
                 return validator.isHttpMethod(v);
             },
             message: "{VALUE} is not a valid http method"
-        }, required: true
+        }, required: true,
+        index: { sparse: true, type: "hashed" },
     },
     routePath: {
         type: String,
@@ -37,16 +40,21 @@ let schema = new Schema({
             },
             message: "routePath={VALUE} is invalid!"
         },
-        required: [true, "routePath is required"]
+        index: { sparse: true, type: "hashed" },
+        required: [true, "routePath is required"],
     },
-    fullRoutePath: { type: String, required: true },
+    fullRoutePath: {
+        type: String,
+        required: true,
+        index: { sparse: true, type: "hashed" },
+    },
     query: { type: String, validate: json_validate("query"), default: "{}" },
     body: { type: String, validate: json_validate("body"), default: "{}" },
     response: { type: String, default: "" },
     responseType: { type: String, default: "json", enum: ["json", "text"] },
 });
 
-export const RawCaseModel = mongoose.model<ICaseModel>(COLLECTIONS.CASE, decorateWithTimestamp(schema));
+export const RawCaseModel = mongoose.model<ICaseModel>(COLLECTIONS.case, decorateWithTimestamp(schema));
 export class CaseRepository extends RepositoryBase<ICaseModel> {
     constructor() {
         super(RawCaseModel);

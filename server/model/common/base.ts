@@ -90,12 +90,6 @@ export class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IW
 
 }
 
-
-export const COLLECTIONS = {
-    APP: "APP", CASE: "CASE", USER: "USER"
-}
-
-
 export function decorateWithTimestamp(schema: mongoose.Schema) {
     schema.add({
         createdAt: {

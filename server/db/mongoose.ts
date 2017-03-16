@@ -18,7 +18,7 @@ export async function connect() {
                     reject(err)
                 } else {
                     hasConnected = true
-                    resolve()
+                    resolve();
                 }
             });
         })
@@ -27,4 +27,8 @@ export async function connect() {
 
 export function getConnection() {
     return mongoose.connection
+}
+
+export const COLLECTIONS = {
+    app: "mockapp", case: "case", user: "user"
 }

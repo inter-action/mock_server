@@ -1,18 +1,29 @@
 import * as mongoose from "mongoose";
-import { Option, Some, None } from "../extend_type";
-import { RepositoryBase, Schema, COLLECTIONS, decorateWithTimestamp } from "./common/base"
 
+
+
+import { COLLECTIONS } from "../db/mongoose"
+import { Option, Some, None } from "../extend_type";
+import { RepositoryBase, Schema, decorateWithTimestamp } from "./common/base"
 import { IUserModel } from "./common/imodel";
 
 // example: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6
 
 let schema = new Schema({
-    username: { type: String, required: true },
+    username: {
+        type: String,
+        required: true,
+        index: { sparse: true, type: "hashed" },
+    },
     password: { type: String, required: true },
-    email: { type: String, required: true },
+    email: {
+        type: String,
+        required: true,
+        index: { sparse: true, type: "hashed" },
+    },
 })
 
-export const RawUserModel = mongoose.model<IUserModel>(COLLECTIONS.USER, decorateWithTimestamp(schema));
+export const RawUserModel = mongoose.model<IUserModel>(COLLECTIONS.user, decorateWithTimestamp(schema));
 export class UserRepository extends RepositoryBase<IUserModel> {
     constructor() {
         super(RawUserModel);

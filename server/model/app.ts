@@ -1,8 +1,8 @@
 import * as mongoose from "mongoose";
+
+import { COLLECTIONS } from "../db/mongoose"
 import { Option, Some, None } from "../extend_type";
-import { RepositoryBase, Schema, COLLECTIONS, decorateWithTimestamp } from "./common/base"
-
-
+import { RepositoryBase, Schema, decorateWithTimestamp } from "./common/base"
 import { validator } from "../utils";
 import { IAppModel } from "./common/imodel";
 
@@ -12,11 +12,13 @@ import { IAppModel } from "./common/imodel";
 // schema validation: http://mongoosejs.com/docs/validation.html
 // schema optiosn: http://mongoosejs.com/docs/guide.html
 // mongodb index: https://docs.mongodb.com/manual/indexes/#Indexes-CompoundKeys
+// mongoose index type value:  http://mongoosejs.com/docs/api.html#schematype_SchemaType-index
+
 let schema = new Schema({
     name: {
         type: String,
         required: true,
-        index: true,
+        index: { unique: true, sparse: true }, // unique key cant be hashed type
         validate: {
             validator: function (v) {
                 return validator.onlyChars(v);
@@ -24,11 +26,11 @@ let schema = new Schema({
             message: "name={VALUE} is invalid!"
         },
     },
-    cases: [{ type: Schema.Types.ObjectId, ref: COLLECTIONS.CASE }],
+    cases: [{ type: Schema.Types.ObjectId, ref: COLLECTIONS.case }],
 })
 
 
-export const RawAppModel = mongoose.model<IAppModel>(COLLECTIONS.APP, decorateWithTimestamp(schema));
+export const RawAppModel = mongoose.model<IAppModel>(COLLECTIONS.app, decorateWithTimestamp(schema));
 export class AppRepository extends RepositoryBase<IAppModel> {
     constructor() {
         super(RawAppModel);

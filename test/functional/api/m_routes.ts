@@ -71,7 +71,7 @@ export function doInSerial() {
         }
     });
 
-    ava.only(`${tag}: empty query should match anything`, async t => {
+    ava(`${tag}: empty query should match anything`, async t => {
         try {
             let agent = chai.request.agent(server);
             let resp = await agent.post("/api/apps").send({ name: "some_app" })

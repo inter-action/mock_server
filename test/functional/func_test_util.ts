@@ -3,7 +3,7 @@ const glob = require("glob");
 
 // KnexInstance
 import { server } from "../../server/index"
-
+import { uid } from "../../server/utils"
 const chaiHttp = require("chai-http")
 const should = chai.should()
 
@@ -53,4 +53,9 @@ export function runWithFilter(cb: (module: any, key: string, hasSideEffect: bool
     })
 }
 
-export { chai, chaiHttp, server, should, expect }
+
+let nextId = () => uid(5).replace(/\d/g, "");
+export const getAppName = (prefix = "some_app") => prefix + "_" + nextId();
+
+
+export { chai, chaiHttp, server, should, expect, uid }

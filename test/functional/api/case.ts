@@ -1,10 +1,11 @@
 const ava = require("ava");
-import { chai, server } from "../func_test_util";
+import { chai, server, getAppName } from "../func_test_util";
 
 let tag = "app:";
 
 export function doInSerial() {
 }
+
 
 /*
     app: any,
@@ -18,7 +19,7 @@ export function doInParellel() {
     ava.cb(`${tag}: create case`, t => {
         let agent = chai.request.agent(server);
         agent.post("/api/apps").send({
-            name: "some_app",
+            name: getAppName(),
         }).then(resp => {
             return resp.body._id
         }).then(_id => {
@@ -34,6 +35,7 @@ export function doInParellel() {
             t.is(resp.status, 200);
             t.end()
         }).catch(e => {
+            console.log(e.response.text)
             t.end(e);
         })
     });
@@ -42,7 +44,7 @@ export function doInParellel() {
     ava(`${tag}: update case`, async t => {
         try {
             let agent = chai.request.agent(server);
-            let resp = await agent.post("/api/apps").send({ name: "some_app" })
+            let resp = await agent.post("/api/apps").send({ name: getAppName() })
             let appid = resp.body._id;
 
             resp = await agent.post(`/api/cases`).send({
@@ -67,7 +69,7 @@ export function doInParellel() {
     ava(`${tag}: get case should work`, async t => {
         try {
             let agent = chai.request.agent(server);
-            let resp = await agent.post("/api/apps").send({ name: "some_app" })
+            let resp = await agent.post("/api/apps").send({ name: getAppName() })
             let appid = resp.body._id;
 
             resp = await agent.post(`/api/cases`).send({
@@ -92,7 +94,7 @@ export function doInParellel() {
     ava(`${tag}: delete case should work`, async t => {
         try {
             let agent = chai.request.agent(server);
-            let resp = await agent.post("/api/apps").send({ name: "some_app" })
+            let resp = await agent.post("/api/apps").send({ name: getAppName() })
             let appid = resp.body._id;
 
             resp = await agent.post(`/api/cases`).send({
