@@ -7,10 +7,13 @@ import { CaseModel, ICaseModel } from "../model"
 export const router = new Router({ prefix: "/_m" })
 
 const isEqual = (src, target) => {
-    return Object.keys(src).every(k => {
+    let keys = Object.keys(src)
+    if (keys.length === 0) return true
+    else return keys.every(k => {
         return _.isEqual(src[k], target[k])
     })
 };
+
 router.all("*", async ctx => {
     let path = ctx.path;
     let payload = ctx.request.body;

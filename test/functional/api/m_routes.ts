@@ -70,6 +70,27 @@ export function doInSerial() {
             console.log(e.response.text); throw e;
         }
     });
+
+    ava.only(`${tag}: empty query should match anything`, async t => {
+        try {
+            let agent = chai.request.agent(server);
+            let resp = await agent.post("/api/apps").send({ name: "some_app" })
+            let appid = resp.body._id;
+
+            resp = await agent.post(`/api/cases`).send({
+                appid,
+                method: "get",
+                routePath: "some_path",
+                query: `{}`,
+                body: `{"body": "i_body"}`,
+                response: `{"resp": "i_resp"}`
+            })
+            resp = await agent.get("/_m/some_app/some_path").send({ whatever: "wiw" });
+            t.is(resp.body.resp, "i_resp")
+        } catch (e) {
+            console.log(e.response.text); throw e;
+        }
+    });
 }
 
 
