@@ -1,14 +1,8 @@
 
-import { ICaseModel } from "./imodel";
+import { ITimeStampedModel } from "./imodel";
 
-export function timestamp(next) {
-    if (this._doc) {
-        let doc = <ICaseModel>this._doc;
-        let now = new Date();
-        if (!doc.createdAt) {
-            doc.createdAt = now;
-        }
-        doc.updatedAt = now;
-    }
-    next();
+export function timestamp(this: ITimeStampedModel, next) {
+    this.updatedAt = new Date();
+    if (!this.createdAt) this.createdAt = this.updatedAt;
+    return next();
 }

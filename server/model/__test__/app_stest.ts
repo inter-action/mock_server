@@ -9,10 +9,13 @@ test.cleanDbAtEachTest(ava);
 
 
 let tag = "#App: "
-ava(`${tag} create app should success`, async t => {
+ava.only(`${tag} create app should success`, async t => {
     await AppModel.create("some_app");
     let result = await AppModel.findByName("some_app");
-    if (result.isEmpty()) throw new Error("insertion failed")
+    t.truthy(result.exists())
+    let app = result.get()
+    t.truthy(app.updatedAt)
+    t.truthy(app.createdAt)
 });
 
 ava(`${tag} create app should fail on invalid field`, async t => {
@@ -30,7 +33,8 @@ ava(`${tag} create app should fail on invalid field`, async t => {
     return t.fail("should_not_reach_here")
 });
 
-// todo: cant figure out a proper way to enable unique index on name field.
+// due to how test is structed right now (drop database before each test),
+// this kind of test would not work
 // ava.only.serial(`${tag} create app should fail on duplicate record`, async t => {
 //     await AppModel.create("some_app");
 //     try {
